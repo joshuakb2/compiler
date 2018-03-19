@@ -11,7 +11,8 @@ char * str(const char * const s);
 
 %%
 
-[ \t\r\n]+         			;
+[ \t\r\n]+         			/* White space */ ;
+%[^\r\n]*                   /* Comments */ ;
 [1-9][0-9]*|0				{ yylval.i = atoi(yytext); printf("%-10s %s\n", "NUM", yytext); return NUM; }
 false|true					{ yylval.b = yytext[0] == 't'; printf("%-10s %s\n", "BOOLLIT", yytext); return BOOLLIT; }
 [A-Z][A-Z0-9]*				{ yylval.s = str(yytext); printf("%-10s %s\n", "IDENT", yytext); return IDENT; }
