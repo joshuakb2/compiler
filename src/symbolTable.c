@@ -109,15 +109,13 @@ void initSymbolTable() {
     if(!symbolTable_inited) {
         hashMap = (st_node **) malloc(sizeof(st_node *) * HASH_MAP_SIZE);
 
-        st_node ** st = hashMap;
         for(int i = 0; i < HASH_MAP_SIZE; i++)
-            *st++ = NULL;
+            hashMap[i] = NULL;
 
         symbolTable = (symbol **) malloc(sizeof(symbol *) * symbolTableSize);
 
-        symbol ** sy = symbolTable;
         for(int i = 0; i < symbolTableSize; i++)
-            *st++ = NULL;
+            symbolTable[i] = NULL;
 
         symbolTable_inited = true;
     }
