@@ -56,6 +56,20 @@ symbol * getSymbol(int i) {
     return &symbolTable[i];
 }
 
+int getHandle(const char * const name) {
+    int hashVal = hash(name) % HASH_MAP_SIZE;
+
+    st_node * n = hashMap[hashVal];
+
+    while(n != NULL) {
+        if(strcmp(symbolTable[n->index].key, name) == 0)
+            return n->index;
+        n = n->next;
+    }
+
+    return -1;
+}
+
 int addSymbol(const char * const name, enum varType type) {
     int hashVal = hash(name) % HASH_MAP_SIZE;
 

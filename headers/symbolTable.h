@@ -14,6 +14,7 @@ typedef struct st_node_s {
 } st_node;
 
 symbol * getSymbol(int i);
+int getHandle(const char * const name);
 int addSymbol(const char * const name, enum varType type);
 void initSymbolTable();
 void freeSymbolTable();
