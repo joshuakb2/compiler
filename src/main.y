@@ -18,6 +18,7 @@ void yyerror(const char * s);
 #include "ops.h"
 #include "structs.h"
 #include "makeStructs.h"
+#include "compile.h"
 
 typedef union {
     program * p;
@@ -88,7 +89,7 @@ void printProgramTree(program * p);
 
 %%
 
-main:               program                                                 { printProgramTree($1); return 0; }
+main:               program                                                 { printProgramTree($1); compile($1); return 0; }
     ;
 
 program:            PROGRAM declarations BEGIN_ statementSequence END       { $$ = makeProgram($2, $4); }
