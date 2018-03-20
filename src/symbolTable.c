@@ -20,7 +20,7 @@
  *          at index i of symbolTable.
  *          Returns NULL if the index is invalid or there is no symbol at that index.
  *
- *      int addSymbol(const char * const name, enum varType type):
+ *      int addSymbol(const char * const name, varType_e type):
  *          Function that adds the given variable to the symbol table and returns
  *          the index of symbolTable where that data was placed.
  *          The returned integer can be used as a handle for that variable.
@@ -59,7 +59,7 @@ symbol * getSymbol(int i) {
 int getHandle(const char * const name) {
     int hashVal = hash(name) % HASH_MAP_SIZE;
 
-    st_node * n = hashMap[hashVal];
+    st_node * n = &hashMap[hashVal];
 
     while(n != NULL) {
         if(strcmp(symbolTable[n->index].key, name) == 0)
@@ -70,7 +70,7 @@ int getHandle(const char * const name) {
     return -1;
 }
 
-int addSymbol(const char * const name, enum varType type) {
+int addSymbol(const char * const name, varType_e type) {
     int hashVal = hash(name) % HASH_MAP_SIZE;
 
     st_node * head = &hashMap[hashVal];

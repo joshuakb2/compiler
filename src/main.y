@@ -18,6 +18,7 @@ void yyerror(const char * s);
 #include "ops.h"
 #include "structs.h"
 #include "makeStructs.h"
+#include "symbolTable.h"
 #include "compile.h"
 
 typedef union {
@@ -36,9 +37,9 @@ typedef union {
     factor * fact;
 } node;
 
-enum nodeType { e_p, e_decls, e_decl, e_stmts, e_stmt, e_asgn, e_ifstmt, e_wstmt, e_wint, e_expr, e_sexpr, e_trm, e_fact };
+typedef enum { e_p, e_decls, e_decl, e_stmts, e_stmt, e_asgn, e_ifstmt, e_wstmt, e_wint, e_expr, e_sexpr, e_trm, e_fact } nodeType_e;
 
-void printTree(node, enum nodeType, int tabs);
+void printTree(node, nodeType_e, int tabs);
 void printProgramTree(program * p);
 
 %}
@@ -47,12 +48,12 @@ void printProgramTree(program * p);
     int i;
 	bool b;
     char * s;
-    enum OP2_v op2;
-    enum OP3_v op3;
-    enum OP4_v op4;
+    OP2_e op2;
+    OP3_e op3;
+    OP4_e op4;
     program * p;
     declarationSeq * decls;
-    enum varType vt;
+    varType_e vt;
     statementSeq * stmts;
     statement * stmt;
     assignment * asgn;
@@ -176,7 +177,7 @@ void printTabs(int tabs) {
         printf("|------ ");
 }
 
-void printTree(node n, enum nodeType t, int tabs) {
+void printTree(node n, nodeType_e t, int tabs) {
     node p;
     switch(t) {
         case e_p:
@@ -192,9 +193,9 @@ void printTree(node n, enum nodeType t, int tabs) {
             printTabs(tabs);
             printf("Node type: %s\n", "declarationSeq");
             printTabs(tabs);
-            printf("count: %d\n", n.decls->count);
+            printf("Count: %d\n", n.decls->count);
             printTabs(tabs);
-            printf("size: %d\n", n.decls->size);
+            printf("Size: %d\n", n.decls->size);
             //  The declarations are in reverse order
             for(int i = n.decls->count - 1; i >= 0; i--) {
                 p.decl = n.decls->decls[i];
@@ -206,22 +207,23 @@ void printTree(node n, enum nodeType t, int tabs) {
             }
             free(n.decls);
             break;
-        case e_decl:
+        case e_decl: {
+            symbol * s = getSymbol(n.decl->varHandle);
             printTabs(tabs);
             printf("Node type: %s\n", "declaration");
             printTabs(tabs);
-            printf("Variable identifier: %s\n", n.decl->ident);
+            printf("Variable identifier: %s\n", s->key);
             printTabs(tabs);
-            printf("variable type: %s\n", getVarType(n.decl->type));
+            printf("Variable type: %s\n", getVarType(s->type));
             free(n.decl);
-            break;
+        }   break;
         case e_stmts:
             printTabs(tabs);
             printf("Node type: %s\n", "statementSeq");
             printTabs(tabs);
-            printf("count: %d\n", n.stmts->count);
+            printf("Count: %d\n", n.stmts->count);
             printTabs(tabs);
-            printf("size: %d\n", n.stmts->size);
+            printf("Size: %d\n", n.stmts->size);
             //  The statements are in reverse order
             for(int i = n.stmts->count - 1; i >= 0; i--) {
                 p.stmt = n.stmts->stmts[i];
@@ -268,7 +270,7 @@ void printTree(node n, enum nodeType t, int tabs) {
             printTabs(tabs);
             printf("Assignment type: %s\n", getAssignmentType(n.asgn->type));
             printTabs(tabs);
-            printf("Variable identifier: %s\n", n.asgn->ident);
+            printf("Variable identifier: %s\n", getSymbol(n.asgn->varHandle)->key);
             if(n.asgn->type == ASSIGN_EXPR) {
                 p.expr = n.asgn->expr;
                 printTree(p, e_expr, tabs + 1);
@@ -319,6 +321,8 @@ void printTree(node n, enum nodeType t, int tabs) {
         case e_expr:
             printTabs(tabs);
             printf("Node type: %s\n", "expression");
+            printTabs(tabs);
+            printf("Type: %s\n", getVarType(n.expr->type));
             if(n.expr->operands == 1) {
                 p.sexpr = n.expr->left;
                 printTree(p, e_sexpr, tabs + 1);
@@ -340,6 +344,8 @@ void printTree(node n, enum nodeType t, int tabs) {
         case e_sexpr:
             printTabs(tabs);
             printf("Node type: %s\n", "simpleExpression");
+            printTabs(tabs);
+            printf("Type: %s\n", getVarType(n.sexpr->type));
             if(n.sexpr->operands == 1) {
                 p.trm = n.sexpr->left;
                 printTree(p, e_trm, tabs + 1);
@@ -361,6 +367,8 @@ void printTree(node n, enum nodeType t, int tabs) {
         case e_trm:
             printTabs(tabs);
             printf("Node type: %s\n", "term");
+            printTabs(tabs);
+            printf("Type: %s\n", getVarType(n.trm->type));
             if(n.trm->operands == 1) {
                 p.fact = n.trm->left;
                 printTree(p, e_fact, tabs + 1);
@@ -384,10 +392,12 @@ void printTree(node n, enum nodeType t, int tabs) {
             printf("Node type: %s\n", "factor");
             printTabs(tabs);
             printf("Factor type: %s\n", getFactorType(n.fact->type));
+            printTabs(tabs);
+            printf("Type: %s\n", getVarType(n.fact->type));
             switch(n.fact->type) {
                 case FACTOR_VAR:
                     printTabs(tabs);
-                    printf("Variable identifier: %s\n", n.fact->u.ident);
+                    printf("Variable identifier: %s\n", getSymbol(n.fact->u.varHandle)->key);
                     break;
                 case FACTOR_NUM:
                     printTabs(tabs);
@@ -416,11 +426,15 @@ void printTree(node n, enum nodeType t, int tabs) {
 }
 
 int main() {
+    initSymbolTable();
+
     printf("%-10s %s\n", "Token", "Lexeme");
     printf("%s", "-------------------\n");
 
     if(!yyparse())
         printf("%s", "\nInput accepted!\n");
+
+    freeSymbolTable();
 
     return 0;
 }

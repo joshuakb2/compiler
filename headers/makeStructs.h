@@ -11,7 +11,7 @@ program * makeProgram(declarationSeq *, statementSeq *);
 declarationSeq * makeDeclarationSeq();
 declarationSeq * addDeclaration(declarationSeq *, declaration *);
 
-declaration * makeDeclaration(char * ident, enum varType);
+declaration * makeDeclaration(char * ident, varType_e);
 
 statementSeq * makeStatementSeq();
 statementSeq * addStatement(statementSeq *, statement *);
@@ -31,13 +31,13 @@ whileStatement * makeWhileStatement(expression * condition, statementSeq * while
 writeInt * makeWriteInt(expression *);
 
 expression * makeExpressionFromSimple(simpleExpression *);
-expression * makeExpressionFromOp(simpleExpression * left, enum OP4_v op, simpleExpression * right);
+expression * makeExpressionFromOp(simpleExpression * left, OP4_e op, simpleExpression * right);
 
 simpleExpression * makeSimpleExpressionFromTerm(term *);
-simpleExpression * makeSimpleExpressionFromOp(term * left, enum OP3_v op, term * right);
+simpleExpression * makeSimpleExpressionFromOp(term * left, OP3_e op, term * right);
 
 term * makeTermFromFactor(factor *);
-term * makeTermFromOp(factor * left, enum OP2_v op, factor * right);
+term * makeTermFromOp(factor * left, OP2_e op, factor * right);
 
 factor * makeFactorFromIdent(char * ident);
 factor * makeFactorFromNum(int);

@@ -40,7 +40,7 @@ int getOp4(const char * const s) {
 	}
 }
 
-char * getOp2Str(enum OP2_v v) {
+char * getOp2Str(OP2_e v) {
     switch(v) {
         case TIMES:
             return "*";
@@ -54,7 +54,7 @@ char * getOp2Str(enum OP2_v v) {
     }
 }
 
-char * getOp3Str(enum OP3_v v) {
+char * getOp3Str(OP3_e v) {
     switch(v) {
         case PLUS:
             return "+";
@@ -66,7 +66,7 @@ char * getOp3Str(enum OP3_v v) {
     }
 }
 
-char * getOp4Str(enum OP4_v v) {
+char * getOp4Str(OP4_e v) {
     switch(v) {
         case EQ:
             return "=";

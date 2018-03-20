@@ -3,7 +3,7 @@
 
 #include "structTypes.h"
 
-char * getVarType(enum varType v) {
+char * getVarType(varType_e v) {
     switch(v) {
         case INT_t:
             return "INT";
@@ -15,7 +15,7 @@ char * getVarType(enum varType v) {
     }
 }
 
-char * getStatementType(enum statementType s) {
+char * getStatementType(statementType_e s) {
     switch(s) {
         case ASSIGN_STMT:
             return "ASSIGN_STMT";
@@ -31,7 +31,7 @@ char * getStatementType(enum statementType s) {
     }
 }
 
-char * getAssignmentType(enum assignmentType a) {
+char * getAssignmentType(assignmentType_e a) {
     switch(a) {
         case ASSIGN_EXPR:
             return "ASSIGN_EXPR";
@@ -43,7 +43,7 @@ char * getAssignmentType(enum assignmentType a) {
     }
 }
 
-char * getFactorType(enum factorType f) {
+char * getFactorType(factorType_e f) {
     switch(f) {
         case FACTOR_VAR:
             return "FACTOR_VAR";

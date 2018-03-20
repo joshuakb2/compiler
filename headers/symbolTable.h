@@ -5,7 +5,7 @@
 
 typedef struct symbol_s {
     char * key;
-    enum varType type;
+    varType_e type;
 } symbol;
 
 typedef struct st_node_s {
@@ -15,7 +15,7 @@ typedef struct st_node_s {
 
 symbol * getSymbol(int i);
 int getHandle(const char * const name);
-int addSymbol(const char * const name, enum varType type);
+int addSymbol(const char * const name, varType_e type);
 void initSymbolTable();
 void freeSymbolTable();
 

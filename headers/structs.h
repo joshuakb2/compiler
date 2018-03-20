@@ -32,8 +32,7 @@ typedef struct declarationSeq_s {
 } declarationSeq;
 
 typedef struct declaration_s {
-    char * ident;
-    enum varType type;
+    int varHandle;
 } declaration;
 
 typedef struct statementSeq_s {
@@ -43,7 +42,7 @@ typedef struct statementSeq_s {
 } statementSeq;
 
 typedef struct statement_s {
-    enum statementType type;
+    statementType_e type;
     union {
         struct assignment_s * asgnStmt;
         struct ifStatement_s * ifStmt;
@@ -53,8 +52,8 @@ typedef struct statement_s {
 } statement;
 
 typedef struct assignment_s {
-    enum assignmentType type;
-    char * ident;
+    assignmentType_e type;
+    int varHandle;
     struct expression_s * expr;
 } assignment;
 
@@ -75,30 +74,34 @@ typedef struct writeInt_s {
 } writeInt;
 
 typedef struct expression_s {
+    varType_e type;
     int operands;
     struct simpleExpression_s * left;
-    enum OP4_v op;
+    OP4_e op;
     struct simpleExpression_s * right;
 } expression;
 
 typedef struct simpleExpression_s {
+    varType_e type;
     int operands;
     struct term_s * left;
-    enum OP3_v op;
+    OP3_e op;
     struct term_s * right;
 } simpleExpression;
 
 typedef struct term_s {
+    varType_e type;
     int operands;
     struct factor_s * left;
-    enum OP2_v op;
+    OP2_e op;
     struct factor_s * right;
 } term;
 
 typedef struct factor_s {
-    enum factorType type;
+    varType_e type;
+    factorType_e factorType;
     union {
-        char * ident;
+        int varHandle;
         int num;
         bool boollit;
         struct expression_s * expr;
