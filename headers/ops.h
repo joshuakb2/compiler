@@ -13,4 +13,8 @@ char * getOp2Str(OP2_e);
 char * getOp3Str(OP3_e);
 char * getOp4Str(OP4_e);
 
+char * getOp2StrC(OP2_e);
+char * getOp3StrC(OP3_e);
+char * getOp4StrC(OP4_e);
+
 #endif

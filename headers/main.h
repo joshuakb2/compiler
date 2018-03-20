@@ -23,8 +23,6 @@ typedef union {
 typedef enum { e_p, e_decls, e_decl, e_stmts, e_stmt, e_asgn, e_ifstmt, e_wstmt, e_wint, e_expr, e_sexpr, e_trm, e_fact } nodeType_e;
 
 void printProgramTree(program * p);
-void printLeadTabs(int tabs);
-void printTabs(int tabs);
 void printTree(node, nodeType_e, int tabs);
 int main();
 

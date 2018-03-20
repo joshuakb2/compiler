@@ -18,6 +18,7 @@ void yyerror(const char * s);
 #include "structs.h"
 #include "makeStructs.h"
 #include "compile.h"
+#include "main.h"
 
 %}
 
@@ -67,7 +68,7 @@ void yyerror(const char * s);
 
 %%
 
-main:               program                                                 { printProgramTree($1); compile($1); return 0; }
+main:               program                                                 { /*printProgramTree($1);*/ compile($1); return 0; }
     ;
 
 program:            PROGRAM declarations BEGIN_ statementSequence END       { $$ = makeProgram($2, $4); }

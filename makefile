@@ -1,4 +1,4 @@
-main:	intermediate/parser.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o intermediate/main.o
+main:	intermediate/parser.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o intermediate/main.o intermediate/utility.o
 	gcc intermediate/*.o -lfl -g
 
 intermediate/parser.tab.o: intermediate/parser.tab.c
@@ -27,6 +27,9 @@ intermediate/sdbm.o: src/sdbm.c
 
 intermediate/main.o: src/main.c
 	gcc -g -Iheaders -o intermediate/main.o -c src/main.c
+
+intermediate/utility.o: src/utility.c
+	gcc -g -Iheaders -o intermediate/utility.o -c src/utility.c
 
 intermediate/parser.tab.c: src/parser.y
 	bison -o intermediate/parser.tab.c -d src/parser.y

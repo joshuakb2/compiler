@@ -4,6 +4,9 @@
 
 #include "ops.h"
 
+/********************************
+** Gives enum from TL13 string **
+********************************/
 int getOp2(const char * const s) {
 	if(s[0] == '*')
 		return TIMES;
@@ -40,6 +43,11 @@ int getOp4(const char * const s) {
 	}
 }
 
+
+
+/********************************
+** Gives TL13 string from enum **
+********************************/
 char * getOp2Str(OP2_e v) {
     switch(v) {
         case TIMES:
@@ -70,6 +78,56 @@ char * getOp4Str(OP4_e v) {
     switch(v) {
         case EQ:
             return "=";
+        case NE:
+            return "!=";
+        case LT:
+            return "<";
+        case LE:
+            return "<=";
+        case GT:
+            return ">";
+        case GE:
+            return ">=";
+        default:
+            printf("THIS SHOULD NEVER HAPPEN!!!\n");
+            return NULL;
+    }
+}
+
+
+/********************************
+**  Gives C string from enum   **
+********************************/
+char * getOp2StrC(OP2_e v) {
+    switch(v) {
+        case TIMES:
+            return "*";
+        case DIV:
+            return "/";
+        case MOD:
+            return "%";
+        default:
+            printf("THIS SHOULD NEVER HAPPEN!!!\n");
+            return NULL;
+    }
+}
+
+char * getOp3StrC(OP3_e v) {
+    switch(v) {
+        case PLUS:
+            return "+";
+        case MINUS:
+            return "-";
+        default:
+            printf("THIS SHOULD NEVER HAPPEN!!!\n");
+            return NULL;
+    }
+}
+
+char * getOp4StrC(OP4_e v) {
+    switch(v) {
+        case EQ:
+            return "==";
         case NE:
             return "!=";
         case LT:
