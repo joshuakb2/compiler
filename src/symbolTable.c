@@ -40,11 +40,11 @@ bool symbolTable_inited = false;
 //  Chosen as a prime number near 32.
 const unsigned int HASH_MAP_SIZE = 31;
 
-st_node * hashMap;
+st_node ** hashMap;
 
 int symbolTableSize = 16;
 int symbolTableLength = 0;
-symbol * symbolTable;
+symbol ** symbolTable;
 
 symbol * getSymbol(int i) {
     if(!symbolTable_inited)
@@ -53,16 +53,16 @@ symbol * getSymbol(int i) {
     if(i < 0 || i >= symbolTableLength)
         return NULL;
 
-    return &symbolTable[i];
+    return symbolTable[i];
 }
 
 int getHandle(const char * const name) {
     int hashVal = hash(name) % HASH_MAP_SIZE;
 
-    st_node * n = &hashMap[hashVal];
+    st_node * n = hashMap[hashVal];
 
     while(n != NULL) {
-        if(strcmp(symbolTable[n->index].key, name) == 0)
+        if(strcmp(symbolTable[n->index]->key, name) == 0)
             return n->index;
         n = n->next;
     }
@@ -73,12 +73,11 @@ int getHandle(const char * const name) {
 int addSymbol(const char * const name, varType_e type) {
     int hashVal = hash(name) % HASH_MAP_SIZE;
 
-    st_node * head = &hashMap[hashVal];
-    st_node ** p = &head;
+    st_node ** p = hashMap + hashVal;
 
     while(*p != NULL) {
         //  If name is already in the symbol table
-        if(strcmp(symbolTable[(*p)->index].key, name) == 0)
+        if(strcmp(symbolTable[(*p)->index]->key, name) == 0)
             return -1;
         p = &((*p)->next);
     }
@@ -88,7 +87,7 @@ int addSymbol(const char * const name, varType_e type) {
     //  Grow the symbol table
     if(symbolTableSize == symbolTableLength) {
         symbolTableSize *= 2;
-        symbolTable = realloc(symbolTable, sizeof(symbol) * symbolTableSize);
+        symbolTable = realloc(symbolTable, sizeof(symbol *) * symbolTableSize);
     }
 
     int index = symbolTableLength++;
@@ -97,25 +96,26 @@ int addSymbol(const char * const name, varType_e type) {
     (*p)->index = index;
     (*p)->next = NULL;
 
-    symbolTable[index].key = (char *) malloc(sizeof(char) * (strlen(name) + 1));
-    strcpy(symbolTable[index].key, name);
+    symbolTable[index] = (symbol *) malloc(sizeof(symbol));
+    symbolTable[index]->key = (char *) malloc(sizeof(char) * (strlen(name) + 1));
+    strcpy(symbolTable[index]->key, name);
 
-    symbolTable[index].type = type;
+    symbolTable[index]->type = type;
 
     return index;
 }
 
 void initSymbolTable() {
     if(!symbolTable_inited) {
-        hashMap = (st_node *) malloc(sizeof(st_node) * HASH_MAP_SIZE);
+        hashMap = (st_node **) malloc(sizeof(st_node *) * HASH_MAP_SIZE);
 
-        st_node ** st = &hashMap;
+        st_node ** st = hashMap;
         for(int i = 0; i < HASH_MAP_SIZE; i++)
             *st++ = NULL;
 
-        symbolTable = (symbol *) malloc(sizeof(symbol) * symbolTableSize);
+        symbolTable = (symbol **) malloc(sizeof(symbol *) * symbolTableSize);
 
-        symbol ** sy = &symbolTable;
+        symbol ** sy = symbolTable;
         for(int i = 0; i < symbolTableSize; i++)
             *st++ = NULL;
 
@@ -130,7 +130,7 @@ void freeSymbolTable() {
         //  Free each st_node
         st_node * p;
         for(int i = 0; i < HASH_MAP_SIZE; i++) {
-            p = &hashMap[i];
+            p = hashMap[i];
             while(p != NULL) {
                 st_node * temp = p->next;
                 free(p);
@@ -139,6 +139,13 @@ void freeSymbolTable() {
         }
         
         free(hashMap);
+
+        //  Free each symbol
+        for(int i = 0; i < symbolTableLength; i++) {
+            free(symbolTable[i]);
+        }
+
+        free(symbolTable);
 
         symbolTableSize = 16;
 

@@ -1,29 +1,29 @@
 main:	intermediate/main.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o
-	gcc intermediate/*.o -lfl -ggdb
+	gcc intermediate/*.o -lfl -g
 
 intermediate/main.tab.o: intermediate/main.tab.c
-	gcc -Iheaders -o intermediate/main.tab.o -c intermediate/main.tab.c
+	gcc -g -Iheaders -o intermediate/main.tab.o -c intermediate/main.tab.c
 
 intermediate/lex.yy.o: intermediate/lex.yy.c
-	gcc -Iheaders -o intermediate/lex.yy.o -c intermediate/lex.yy.c
+	gcc -g -Iheaders -o intermediate/lex.yy.o -c intermediate/lex.yy.c
 
 intermediate/ops.o: src/ops.c
-	gcc -Iheaders -o intermediate/ops.o -c src/ops.c
+	gcc -g -Iheaders -o intermediate/ops.o -c src/ops.c
 
 intermediate/structTypes.o: src/structTypes.c
-	gcc -Iheaders -o intermediate/structTypes.o -c src/structTypes.c
+	gcc -g -Iheaders -o intermediate/structTypes.o -c src/structTypes.c
 
 intermediate/makeStructs.o: src/makeStructs.c
-	gcc -Iheaders -o intermediate/makeStructs.o -c src/makeStructs.c
+	gcc -g -Iheaders -o intermediate/makeStructs.o -c src/makeStructs.c
 
 intermediate/compile.o: src/compile.c
-	gcc -Iheaders -o intermediate/compile.o -c src/compile.c
+	gcc -g -Iheaders -o intermediate/compile.o -c src/compile.c
 
 intermediate/symbolTable.o: src/symbolTable.c
-	gcc -Iheaders -o intermediate/symbolTable.o -c src/symbolTable.c
+	gcc -g -Iheaders -o intermediate/symbolTable.o -c src/symbolTable.c
 
 intermediate/sdbm.o: src/sdbm.c
-	gcc -Iheaders -o intermediate/sdbm.o -c src/sdbm.c
+	gcc -g -Iheaders -o intermediate/sdbm.o -c src/sdbm.c
 
 
 intermediate/main.tab.c: src/main.y
