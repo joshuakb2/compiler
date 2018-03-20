@@ -87,7 +87,7 @@ int addSymbol(const char * const name, varType_e type) {
     //  Grow the symbol table
     if(symbolTableSize == symbolTableLength) {
         symbolTableSize *= 2;
-        symbolTable = realloc(symbolTable, sizeof(symbol *) * symbolTableSize);
+        symbolTable = (symbol **) realloc(symbolTable, sizeof(symbol *) * symbolTableSize);
     }
 
     int index = symbolTableLength++;
@@ -125,8 +125,6 @@ void initSymbolTable() {
 
 void freeSymbolTable() {
     if(symbolTable_inited) {
-        free(symbolTable);
-
         //  Free each st_node
         st_node * p;
         for(int i = 0; i < HASH_MAP_SIZE; i++) {
@@ -134,18 +132,22 @@ void freeSymbolTable() {
             while(p != NULL) {
                 st_node * temp = p->next;
                 free(p);
+                hashMap[i] = NULL;
                 p = temp;
             }
         }
         
         free(hashMap);
+        hashMap = NULL;
 
         //  Free each symbol
         for(int i = 0; i < symbolTableLength; i++) {
             free(symbolTable[i]);
+            symbolTable[i] = NULL;
         }
 
         free(symbolTable);
+        symbolTable = NULL;
 
         symbolTableSize = 16;
 

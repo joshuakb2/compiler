@@ -432,7 +432,7 @@ int main() {
     printf("%s", "-------------------\n");
 
     if(!yyparse())
-        printf("%s", "\nInput accepted!\n");
+        printf("\n%s\n", "Input accepted!");
 
     freeSymbolTable();
 
