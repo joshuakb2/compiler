@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "../intermediate/main.tab.h"
+#include "../intermediate/parser.tab.h"
 #include "ops.h"
 
 char * str(const char * const s);

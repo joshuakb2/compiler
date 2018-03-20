@@ -1,8 +1,8 @@
-main:	intermediate/main.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o
+main:	intermediate/parser.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o intermediate/main.o
 	gcc intermediate/*.o -lfl -g
 
-intermediate/main.tab.o: intermediate/main.tab.c
-	gcc -g -Iheaders -o intermediate/main.tab.o -c intermediate/main.tab.c
+intermediate/parser.tab.o: intermediate/parser.tab.c
+	gcc -g -Iheaders -o intermediate/parser.tab.o -c intermediate/parser.tab.c
 
 intermediate/lex.yy.o: intermediate/lex.yy.c
 	gcc -g -Iheaders -o intermediate/lex.yy.o -c intermediate/lex.yy.c
@@ -25,12 +25,14 @@ intermediate/symbolTable.o: src/symbolTable.c
 intermediate/sdbm.o: src/sdbm.c
 	gcc -g -Iheaders -o intermediate/sdbm.o -c src/sdbm.c
 
+intermediate/main.o: src/main.c
+	gcc -g -Iheaders -o intermediate/main.o -c src/main.c
 
-intermediate/main.tab.c: src/main.y
-	bison -o intermediate/main.tab.c -d src/main.y
+intermediate/parser.tab.c: src/parser.y
+	bison -o intermediate/parser.tab.c -d src/parser.y
 
-intermediate/lex.yy.c: src/main.l intermediate/main.tab.h
-	flex -o intermediate/lex.yy.c src/main.l
+intermediate/lex.yy.c: src/lexer.l intermediate/parser.tab.h
+	flex -o intermediate/lex.yy.c src/lexer.l
 
 clean:
 	rm -f core a.out intermediate/*
