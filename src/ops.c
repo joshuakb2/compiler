@@ -1,3 +1,15 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * ops.c
+ * 
+ * This file implements functions which convert between enum values
+ * and their string representation in TL13. Used when building
+ * the parse tree and when printing it.
+ */
+
+#define __STDC_WANT_LIB_EXT2__ 1
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

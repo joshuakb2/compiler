@@ -1,3 +1,14 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * main.c
+ * 
+ * This file contains the main function as well as the logic for
+ * printing the parse tree to the standard output after it's been built.
+ */
+
+#define __STDC_WANT_LIB_EXT2__ 1
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -231,10 +242,10 @@ void printTree(node n, nodeType_e t, int tabs) {
             printLines(tabs);
             printf("Node type: %s\n", "factor");
             printLines(tabs);
-            printf("Factor type: %s\n", getFactorType(n.fact->type));
+            printf("Factor type: %s\n", getFactorType(n.fact->factorType));
             printLines(tabs);
             printf("Type: %s\n", getVarType(n.fact->type));
-            switch(n.fact->type) {
+            switch(n.fact->factorType) {
                 case FACTOR_VAR:
                     printLines(tabs);
                     printf("Variable identifier: %s\n", getSymbol(n.fact->u.varHandle)->key);

@@ -1,3 +1,15 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * compile.c
+ * 
+ * This file converts parse tree nodes to C code and prints that code
+ * out onto the standard output.
+ * As soon as the code has been printed for any particular node, that
+ * node's memory is freed.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -49,13 +61,18 @@ void printFooter() {
                    "\treturn 0;\n}");
 }
 
+//	Print all the variable declarations.
 void declareVars(declarationSeq * decls, int tabs) {
     //  Declarations are in reverse order. Not that it matters :P
     for(int i = decls->count - 1; i >= 0; i--) {
         symbol * s = getSymbol(decls->decls[i]->varHandle);
 
         printTabs(tabs);
-        printf("%s %s = %s;\n", s->type == INT_t ? "int" : "bool", s->key, s->type == INT_t ? "0" : "false");
+        printf("%s %s = %s;\n",
+				s->type == INT_t ? "int" : "bool",	//	type
+				s->key,								//	name
+				s->type == INT_t ? "0" : "false"	//	initial value
+		);
 
         free(decls->decls[i]);
     }
@@ -64,6 +81,8 @@ void declareVars(declarationSeq * decls, int tabs) {
     free(decls);
 }
 
+//	Print all the statements
+//	Keeping track of tabs makes it prettier
 void printStatements(statementSeq * stmts, int tabs) {
     //  Statements are in reverse order. This part actually really does matter D:
     for(int i = stmts->count - 1; i >= 0; i--) {
@@ -90,6 +109,7 @@ void printStatements(statementSeq * stmts, int tabs) {
     free(stmts);
 }
 
+//	Print an assignment statement
 void printAssignment(assignment * a, int tabs) {
     switch(a->type) {
         case ASSIGN_EXPR:
@@ -100,13 +120,17 @@ void printAssignment(assignment * a, int tabs) {
             break;
         case ASSIGN_READINT:
             printTabs(tabs);
-            printf("%s = readInt();\n", getSymbol(a->varHandle)->key);
+			//	See printHeader() for definition of readInt()
+            printf("%s = readInt();\n",
+					getSymbol(a->varHandle)->key	//	variable name
+			);
             break;
     }
 
     free(a);
 }
 
+//	Print an if statement (and else clause if present)
 void printIf(ifStatement * i, int tabs) {
     printTabs(tabs);
     printf("if (");
@@ -126,6 +150,7 @@ void printIf(ifStatement * i, int tabs) {
     free(i);
 }
 
+//	Print a while loop
 void printWhile(whileStatement * w, int tabs) {
     printTabs(tabs);
     printf("while (");
@@ -138,15 +163,18 @@ void printWhile(whileStatement * w, int tabs) {
     free(w);
 }
 
+//	Print a writeInt statement
 void printWriteInt(writeInt * w, int tabs) {
     printTabs(tabs);
-    printf("printf(\"%%d\\n\", ");
+	//	Expression is known to evaluate to int.
+    printf("%s", "printf(\"%d\\n\", ");
     printExpression(w->expr);
-    printf(");\n");
+    printf("%s", ");\n");
 
     free(w);
 }
 
+//	Print an expression
 void printExpression(expression * e) {
     switch(e->operands) {
         case 1:
@@ -162,6 +190,7 @@ void printExpression(expression * e) {
     free(e);
 }
 
+//	Print a simple expression
 void printSimpleExpression(simpleExpression * e) {
     switch(e->operands) {
         case 1:
@@ -177,6 +206,7 @@ void printSimpleExpression(simpleExpression * e) {
     free(e);
 }
 
+//	Print a term
 void printTerm(term * t) {
     switch(t->operands) {
         case 1:
@@ -192,10 +222,13 @@ void printTerm(term * t) {
     free(t);
 }
 
+//	Print a factor
 void printFactor(factor * f) {
     switch(f->factorType) {
         case FACTOR_VAR:
-            printf("%s", getSymbol(f->u.varHandle)->key);
+            printf("%s",
+					getSymbol(f->u.varHandle)->key	//	Variable name
+			);
             break;
         case FACTOR_NUM:
             printf("%d", f->u.num);

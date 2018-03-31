@@ -1,4 +1,15 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * lexer.l
+ * 
+ * This is the input file to flex. It builds the lexical analyzer,
+ * which reads in characters from the standard input and outputs tokens.
+ */
+
 %{
+#define __STDC_WANT_LIB_EXT2__ 1
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -6,16 +17,17 @@
 #include "../intermediate/parser.tab.h"
 #include "ops.h"
 
-char * str(const char * const s);
 %}
 
+
+/*	token regex/string literal					code	*/
 %%
 
 [ \t\r\n]+         			/* White space */ ;
 %[^\r\n]*                   /* Comments */ ;
 [1-9][0-9]*|0				{ yylval.i = atoi(yytext); /*printf("%-10s %s\n", "NUM", yytext);*/ return NUM; }
 false|true					{ yylval.b = yytext[0] == 't'; /*printf("%-10s %s\n", "BOOLLIT", yytext);*/ return BOOLLIT; }
-[A-Z][A-Z0-9]*				{ yylval.s = str(yytext); /*printf("%-10s %s\n", "IDENT", yytext);*/ return IDENT; }
+[A-Z][A-Z0-9]*				{ yylval.s = strdup(yytext); /*printf("%-10s %s\n", "IDENT", yytext);*/ return IDENT; }
 "("               		  	{ /*printf("%-10s %s\n", "LP", yytext);*/ return LP; }
 ")"               		  	{ /*printf("%-10s %s\n", "RP", yytext);*/ return RP; }
 ":="						{ /*printf("%-10s %s\n", "ASGN", yytext);*/ return ASGN; }
@@ -39,9 +51,3 @@ writeInt					{ /*printf("%-10s %s\n", "WRITEINT", yytext);*/ return WRITEINT; }
 readInt						{ /*printf("%-10s %s\n", "READINT", yytext);*/ return READINT; }
 
 %%
-
-char * str(const char * const s) {
-    char * t = (char *) malloc(sizeof(char) * (1 + strlen(s)));
-    strcpy(t, s);
-    return t;
-}

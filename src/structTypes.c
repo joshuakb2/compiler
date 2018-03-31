@@ -1,3 +1,13 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * structTypes.c
+ * 
+ * This file implements functions which convert enum values to more
+ * human-friendly strings. Used when printing the parse tree.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
