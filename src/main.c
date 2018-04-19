@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "utility.h"
 #include "structs.h"
@@ -274,6 +275,20 @@ void printTree(node n, nodeType_e t, int tabs) {
             printf("THIS SHOULD NEVER HAPPEN!!!\n");
             break;
     }
+}
+
+void yyerror(const char * s, ...) {
+    va_list args;
+
+    va_start(args, s);
+
+    printf("\n\nError: ");
+    vprintf(s, args);
+    printf("\n\n");
+
+    va_end(args);
+
+    exit(1);
 }
 
 int main() {

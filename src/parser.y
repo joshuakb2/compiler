@@ -12,8 +12,6 @@
 
 %{
 
-void yyerror(const char * s);
-
 #include "ops.h"
 #include "structs.h"
 #include "makeStructs.h"
@@ -130,7 +128,11 @@ factor:             IDENT                                                   { $$
 
 %%
 
+
+
+/*
 void yyerror(const char * s) {
     printf("\n\nError: %s\n\n", s);
     exit(1);
 }
+*/

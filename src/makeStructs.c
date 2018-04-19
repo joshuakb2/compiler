@@ -17,6 +17,7 @@
 #include "structs.h"
 #include "makeStructs.h"
 #include "symbolTable.h"
+#include "main.h"
 
 program * makeProgram(declarationSeq * decls, statementSeq * stmts) {
 	//	Allocate memory for the new node
@@ -62,8 +63,7 @@ declaration * makeDeclaration(char * ident, varType_e type) {
 
 	//	If it was already there
     if(varHandle == -1) {
-        printf("Error: Variable \"%s\" was declared more than once.\n\n", ident);
-        exit(1);
+        yyerror("Variable \"%s\" was declared more than once.", ident);
     }
     
     d->varHandle = varHandle;
@@ -145,8 +145,7 @@ assignment * makeAssignmentFromReadInt(char * ident) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
-        exit(1);
+        yyerror("Variable \"%s\" was not declared.", ident);
     }
 
 	//	Make sure this variable is the right type
@@ -154,8 +153,7 @@ assignment * makeAssignmentFromReadInt(char * ident) {
 
 	//	If not
     if(s->type != INT_t) {
-        printf("Error: Variable \"%s\" was used as an int but not declared as such.\n\n", ident);
-        exit(1);
+        yyerror("Variable \"%s\" was used as an int but not declared as such.", ident);
     }
 
     a->type = ASSIGN_READINT;
@@ -177,8 +175,7 @@ assignment * makeAssignmentFromExpr(char * ident, expression * e) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
-        exit(1);
+        yyerror("Variable \"%s\" was not declared.", ident);
     }
 
 	//	Make sure this variable is the right type
@@ -186,8 +183,7 @@ assignment * makeAssignmentFromExpr(char * ident, expression * e) {
 
 	//	If not
     if(s->type != e->type) {
-        printf("Error: \"%s\" has type %s, but the right hand side has type %s.\n\n", ident, getVarType(s->type), getVarType(e->type));
-        exit(1);
+        yyerror("\"%s\" has type %s, but the right hand side has type %s.", ident, getVarType(s->type), getVarType(e->type));
     }
 
     a->type = ASSIGN_EXPR;
@@ -206,8 +202,7 @@ ifStatement * makeIfStatement(expression * condition, statementSeq * ifTrue, sta
 
 	//	If the expression doesn't evaluate to bool, it can't be a condition.
     if(condition->type != BOOL_t) {
-        printf("Error: The if statement's condition does not evaluate to boolean.\n\n");
-        exit(1);
+        yyerror("The if statement's condition does not evaluate to boolean.");
     }
 
     i->hasElse = (ifFalse != NULL);
@@ -224,8 +219,7 @@ whileStatement * makeWhileStatement(expression * condition, statementSeq * while
 
 	//	If the expression doesn't evaluate to bool, it can't be a condition.
     if(condition->type != BOOL_t) {
-        printf("Error: The while statement's condition does not evaluate to boolean.\n\n");
-        exit(1);
+        yyerror("The while statement's condition does not evaluate to boolean.");
     }
 
     w->condition = condition;
@@ -262,12 +256,10 @@ expression * makeExpressionFromOp(simpleExpression * left, OP4_e op, simpleExpre
 
 	//	Both operands must be ints
     if(left->type != INT_t) {
-        printf("Error: Left side of %s operation is not an int expression.\n\n", getOp4Str(op));
-        exit(1);
+        yyerror("Left side of %s operation is not an int expression.", getOp4Str(op));
     }
     if(right->type != INT_t) {
-        printf("Error: Right side of %s operation is not an int expression.\n\n", getOp4Str(op));
-        exit(1);
+        yyerror("Right side of %s operation is not an int expression.", getOp4Str(op));
     }
 
 	//	OP4 always produces a bool result
@@ -300,12 +292,10 @@ simpleExpression * makeSimpleExpressionFromOp(term * left, OP3_e op, term * righ
 
 	//	Both operands must be ints
     if(left->type != INT_t) {
-        printf("Error: Left side of %s operation is not an int expression.\n\n", getOp3Str(op));
-        exit(1);
+        yyerror("Left side of %s operation is not an int expression.", getOp3Str(op));
     }
     if(right->type != INT_t) {
-        printf("Error: Right side of %s operation is not an int expression.\n\n", getOp3Str(op));
-        exit(1);
+        yyerror("Right side of %s operation is not an int expression.", getOp3Str(op));
     }
 
 	//	OP3 always produces an int result
@@ -338,12 +328,10 @@ term * makeTermFromOp(factor * left, OP2_e op, factor * right) {
 
 	//	Both operands must be ints.
     if(left->type != INT_t) {
-        printf("Error: Left side of %s operation is not an int expression.\n\n", getOp2Str(op));
-        exit(1);
+        yyerror("Left side of %s operation is not an int expression.", getOp2Str(op));
     }
     if(right->type != INT_t) {
-        printf("Error: Right side of %s operation is not an int expression.\n\n", getOp2Str(op));
-        exit(1);
+        yyerror("Right side of %s operation is not an int expression.", getOp2Str(op));
     }
 
 	//	OP2 always produces an int result
@@ -366,8 +354,7 @@ factor * makeFactorFromIdent(char * ident) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
-        exit(1);
+        yyerror("Variable \"%s\" was not declared.", ident);
     }
 
 	//	Find out what this variable's type is
