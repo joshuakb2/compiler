@@ -12,6 +12,8 @@
 #ifndef main_h
 #define main_h
 
+#include <stdarg.h>
+
 extern int yylex();
 extern int yyparse();
 
@@ -37,6 +39,8 @@ typedef enum { e_p, e_decls, e_decl, e_stmts, e_stmt, e_asgn, e_ifstmt, e_wstmt,
 
 void printProgramTree(program * p);
 void printTree(node, nodeType_e, int tabs);
+
+void yyerror(const char * s, ...);
 
 int main();
 

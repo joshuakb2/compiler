@@ -1,5 +1,5 @@
 main:	intermediate/parser.tab.o intermediate/lex.yy.o intermediate/ops.o intermediate/structTypes.o intermediate/makeStructs.o intermediate/compile.o intermediate/symbolTable.o intermediate/sdbm.o intermediate/main.o intermediate/utility.o
-	gcc intermediate/*.o -lfl -g
+	gcc intermediate/*.o -lfl -g -o tl13compiler
 
 intermediate/parser.tab.o: intermediate/parser.tab.c
 	gcc -g -Iheaders -o intermediate/parser.tab.o -c intermediate/parser.tab.c
@@ -38,4 +38,4 @@ intermediate/lex.yy.c: src/lexer.l intermediate/parser.tab.h
 	flex -o intermediate/lex.yy.c src/lexer.l
 
 clean:
-	rm -f core a.out intermediate/*
+	rm -f core tl13compiler intermediate/* compiled/*

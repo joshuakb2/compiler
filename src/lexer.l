@@ -16,6 +16,9 @@
 
 #include "../intermediate/parser.tab.h"
 #include "ops.h"
+#include "main.h"
+
+int getInt(char * s);
 
 %}
 
@@ -25,7 +28,7 @@
 
 [ \t\r\n]+         			/* White space */ ;
 %[^\r\n]*                   /* Comments */ ;
-[1-9][0-9]*|0				{ yylval.i = atoi(yytext); /*printf("%-10s %s\n", "NUM", yytext);*/ return NUM; }
+[1-9][0-9]*|0				{ yylval.i = getInt(yytext); /*printf("%-10s %s\n", "NUM", yytext);*/ return NUM; }
 false|true					{ yylval.b = yytext[0] == 't'; /*printf("%-10s %s\n", "BOOLLIT", yytext);*/ return BOOLLIT; }
 [A-Z][A-Z0-9]*				{ yylval.s = strdup(yytext); /*printf("%-10s %s\n", "IDENT", yytext);*/ return IDENT; }
 "("               		  	{ /*printf("%-10s %s\n", "LP", yytext);*/ return LP; }
@@ -51,3 +54,37 @@ writeInt					{ /*printf("%-10s %s\n", "WRITEINT", yytext);*/ return WRITEINT; }
 readInt						{ /*printf("%-10s %s\n", "READINT", yytext);*/ return READINT; }
 
 %%
+
+int getInt(char * s) {
+    int ival = atoi(s);
+    
+    //  If ival is negative, there was definitely an overflow
+    if(ival < 0)
+        yyerror("Integer out of range: %s", s);
+
+    //  Find out if int is long enough to overflow
+    int length = strlen(s);
+
+    //  Maximum legal value is 2147483647 (10 digits long)
+    //  If it's shorter than that, it couldn't possibly overflow.
+    if(length < 10)
+        return ival;
+
+    //  If it's 11 or more digits long, it definitely does overflow.
+    else if(length > 10)
+        yyerror("Integer out of range: %s", s);
+
+    //  If it's exactly 10, we have more work to do.
+    else {
+        //  If the first digit is less than or equal to 2, definitely did not overflow.
+        //  This is because all values less than 2000000000 are less than 2147483647,
+        //  and all values 10 digits long starting with 2 correspond to negative
+        //  integer values, which was covered in the first condition of this function.
+        if(s[0] <= '2')
+            return ival;
+        
+        //  If the first digit is greater than 2, definitely did overflow.
+        else
+            yyerror("Integer out of range: %s", s);
+    }
+}
