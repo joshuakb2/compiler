@@ -38,4 +38,4 @@ intermediate/lex.yy.c: src/lexer.l intermediate/parser.tab.h
 	flex -o intermediate/lex.yy.c src/lexer.l
 
 clean:
-	rm -f core tl13compiler intermediate/* examples/*.c examples/*.out
+	rm -f core tl13compiler intermediate/* compiled/*

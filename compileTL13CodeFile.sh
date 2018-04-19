@@ -22,9 +22,10 @@ if [[ "$1" == "--help" ]]; then
     exit 0
 fi
 
-tl13file="$1"
-cFile="${tl13file%.*}.c"
-binFile="${tl13file%.*}.out"
+tl13filePath="$1"
+tl13fileName="$(basename $tl13filePath)"
+cFile="$DIR/compiled/${tl13fileName%.*}.c"
+binFile="$DIR/compiled/${tl13fileName%.*}.out"
 compiler="$DIR/tl13compiler"
 
 # Make sure the compiler is there and can be executed
@@ -35,9 +36,9 @@ if ! [[ -x "$compiler" ]]; then
 fi
 
 # If the first argument refers to a file that exists
-if [[ -f "$tl13file" ]]; then
+if [[ -f "$tl13filePath" ]]; then
     # Run that file through my compiler, send output to C file and stdout
-    cat "$tl13file" | "$compiler" | tee "$cFile"
+    cat "$tl13filePath" | "$compiler" | tee "$cFile"
 
     # tee will output 0 regardless of whether my compiler succeeded or failed,
     # so check specifically the return value from my compiler.
