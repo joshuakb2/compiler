@@ -131,5 +131,6 @@ factor:             IDENT                                                   { $$
 %%
 
 void yyerror(const char * s) {
-    printf("Error: %s\n", s);
+    printf("\n\nError: %s\n\n", s);
+    exit(1);
 }

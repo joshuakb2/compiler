@@ -62,7 +62,7 @@ declaration * makeDeclaration(char * ident, varType_e type) {
 
 	//	If it was already there
     if(varHandle == -1) {
-        printf("Error: \"%s\" declared more than once.\n\n", ident);
+        printf("Error: Variable \"%s\" was declared more than once.\n\n", ident);
         exit(1);
     }
     
@@ -145,7 +145,7 @@ assignment * makeAssignmentFromReadInt(char * ident) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: \"%s\" was not declared.\n\n", ident);
+        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
         exit(1);
     }
 
@@ -154,7 +154,7 @@ assignment * makeAssignmentFromReadInt(char * ident) {
 
 	//	If not
     if(s->type != INT_t) {
-        printf("Error: \"%s\" was not declared as an int.\n\n", ident);
+        printf("Error: Variable \"%s\" was used as an int but not declared as such.\n\n", ident);
         exit(1);
     }
 
@@ -177,7 +177,7 @@ assignment * makeAssignmentFromExpr(char * ident, expression * e) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: \"%s\" was not declared.\n\n", ident);
+        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
         exit(1);
     }
 
@@ -206,7 +206,7 @@ ifStatement * makeIfStatement(expression * condition, statementSeq * ifTrue, sta
 
 	//	If the expression doesn't evaluate to bool, it can't be a condition.
     if(condition->type != BOOL_t) {
-        printf("Error: The expression does not evaluate to boolean.\n\n");
+        printf("Error: The if statement's condition does not evaluate to boolean.\n\n");
         exit(1);
     }
 
@@ -224,7 +224,7 @@ whileStatement * makeWhileStatement(expression * condition, statementSeq * while
 
 	//	If the expression doesn't evaluate to bool, it can't be a condition.
     if(condition->type != BOOL_t) {
-        printf("Error: The expression does not evaluate to boolean.\n\n");
+        printf("Error: The while statement's condition does not evaluate to boolean.\n\n");
         exit(1);
     }
 
@@ -366,7 +366,7 @@ factor * makeFactorFromIdent(char * ident) {
 
 	//	If not
     if(varHandle == -1) {
-        printf("Error: \"%s\" was not declared.\n\n", ident);
+        printf("Error: Variable \"%s\" was not declared.\n\n", ident);
         exit(1);
     }
 

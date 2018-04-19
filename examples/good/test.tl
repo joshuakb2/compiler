@@ -8,7 +8,6 @@ begin
 
    if SMALLER > BIGGER then
       TEMP := SMALLER;
-%      TEMP1 := 2147483648;
       SMALLER := BIGGER;
       BIGGER := TEMP;
    end ;
