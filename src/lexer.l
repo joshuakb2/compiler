@@ -56,35 +56,24 @@ readInt						{ /*printf("%-10s %s\n", "READINT", yytext);*/ return READINT; }
 %%
 
 int getInt(char * s) {
-    int ival = atoi(s);
-    
-    //  If ival is negative, there was definitely an overflow
-    if(ival < 0)
-        yyerror("Integer out of range: %s", s);
+    int c = strlen(s);
 
-    //  Find out if int is long enough to overflow
-    int length = strlen(s);
-
-    //  Maximum legal value is 2147483647 (10 digits long)
-    //  If it's shorter than that, it couldn't possibly overflow.
-    if(length < 10)
-        return ival;
-
-    //  If it's 11 or more digits long, it definitely does overflow.
-    else if(length > 10)
-        yyerror("Integer out of range: %s", s);
-
-    //  If it's exactly 10, we have more work to do.
+    //  The maximum value is 10 digits long
+    //  The given integer is above the maximum
+    if(c > 10)
+        yyerror("The integer literal %s is above the maximum allowed value (2147483647).", s);
+    //  The given integer is below the maximum
+    else if(c < 10)
+        return atoi(s);
     else {
-        //  If the first digit is less than or equal to 2, definitely did not overflow.
-        //  This is because all values less than 2000000000 are less than 2147483647,
-        //  and all values 10 digits long starting with 2 correspond to negative
-        //  integer values, which was covered in the first condition of this function.
-        if(s[0] <= '2')
-            return ival;
-        
-        //  If the first digit is greater than 2, definitely did overflow.
+        //  Both have 10 digits, so alphanumeric comparison == numeric comparison
+        c = strcmp(s, "2147483647");
+
+        //  The given integer is less than or equal to the maximum
+        if(c <= 0)
+            return atoi(s);
+        //  The given integer is above the maximum
         else
-            yyerror("Integer out of range: %s", s);
+            yyerror("The integer literal %s is above the maximum allowed value (2147483647).", s);
     }
 }
