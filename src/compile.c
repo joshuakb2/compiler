@@ -22,6 +22,9 @@
 #include "symbolTable.h"
 #include "compile.h"
 
+const char VAR_HEADER[] = "tl13_";
+const int VAR_HEADER_LENGTH = 5;
+
 void compile(program * p) {
     printHeader();
     printf("\n");
@@ -67,13 +70,17 @@ void declareVars(declarationSeq * decls, int tabs) {
     for(int i = decls->count - 1; i >= 0; i--) {
         symbol * s = getSymbol(decls->decls[i]->varHandle);
 
+        bool isInt = s->type == INT_t;
+        char * name = getVarName(s);
+
         printTabs(tabs);
         printf("%s %s = %s;\n",
-				s->type == INT_t ? "int" : "bool",	//	type
-				s->key,								//	name
-				s->type == INT_t ? "0" : "false"	//	initial value
+				isInt ? "int" : "bool",	//	type
+				name,					//	name
+				isInt ? "0" : "false"	//	initial value
 		);
 
+        free(name);
         free(decls->decls[i]);
     }
 
@@ -111,22 +118,23 @@ void printStatements(statementSeq * stmts, int tabs) {
 
 //	Print an assignment statement
 void printAssignment(assignment * a, int tabs) {
+    char * varName = getVarName(getSymbol(a->varHandle));
+
     switch(a->type) {
         case ASSIGN_EXPR:
             printTabs(tabs);
-            printf("%s = ", getSymbol(a->varHandle)->key);
+            printf("%s = ", varName);
             printExpression(a->expr);
             printf(";\n");
             break;
         case ASSIGN_READINT:
             printTabs(tabs);
 			//	See printHeader() for definition of readInt()
-            printf("%s = readInt();\n",
-					getSymbol(a->varHandle)->key	//	variable name
-			);
+            printf("%s = readInt();\n", varName);
             break;
     }
 
+    free(varName);
     free(a);
 }
 
@@ -225,11 +233,11 @@ void printTerm(term * t) {
 //	Print a factor
 void printFactor(factor * f) {
     switch(f->factorType) {
-        case FACTOR_VAR:
-            printf("%s",
-					getSymbol(f->u.varHandle)->key	//	Variable name
-			);
-            break;
+        case FACTOR_VAR: {
+            char * varName = getVarName(getSymbol(f->u.varHandle));
+            printf("%s", varName);
+            free(varName);
+        }   break;
         case FACTOR_NUM:
             printf("%d", f->u.num);
             break;
@@ -244,4 +252,14 @@ void printFactor(factor * f) {
     }
 
     free(f);
+}
+
+//  Adds the header to the symbol name
+char * getVarName(symbol * s) {
+    char * name = (char *) malloc(sizeof(char) * (strlen(s->key) + 1 + VAR_HEADER_LENGTH));
+
+    strcpy(name, VAR_HEADER);
+    strcpy(name + VAR_HEADER_LENGTH, s->key);
+
+    return name;
 }

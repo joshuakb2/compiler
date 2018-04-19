@@ -12,6 +12,10 @@
 #define compile_h
 
 #include "structs.h"
+#include "symbolTable.h"
+
+extern const char VAR_HEADER[];
+extern const int VAR_HEADER_LENGTH;
 
 //	Main compile function
 void compile(program * p);
@@ -34,5 +38,9 @@ void printExpression(expression * e);
 void printSimpleExpression(simpleExpression * e);
 void printTerm(term * t);
 void printFactor(factor * f);
+
+//  Adds the variable name header to the symbol's identifier string
+//  (to prevent variable name collisions in the C code, such as "NULL")
+char * getVarName(symbol * s);
 
 #endif
