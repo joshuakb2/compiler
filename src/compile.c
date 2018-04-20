@@ -27,11 +27,9 @@ const int VAR_HEADER_LENGTH = 5;
 
 void compile(program * p) {
     printHeader();
-    printf("\n");
     declareVars(p->decls, 1);
     printf("\n");
     printStatements(p->stmts, 1);
-    printf("\n");
     printFooter();
 
     free(p);
@@ -43,25 +41,22 @@ void printHeader() {
                  "#include <stdbool.h>\n"
                  "#include <string.h>\n"
                  "\n"
-                 "char * buffer;\n"
-                 "size_t size;"
-                 "\n"
                  "int readInt() {\n"
                    "\tprintf(\"%s\", \"Please type an integer: \");\n"
-                   "\tgetline(&buffer, &size, stdin);\n"
-                   "\treturn atoi(buffer);\n"
+                   "\tchar * s = NULL;\n"
+                   "\tsize_t length;\n"
+                   "\tgetline(&s, &length, stdin);\n"
+                   "\tint n = atoi(s);\n"
+                   "\tfree(s);\n"
+                   "\treturn n;\n"
                  "}\n"
                  "\n"
                  "int main() {\n"
-                   "\tsize = 30;\n"
-                   "\tbuffer = (char *) malloc(sizeof(char) * size);\n"
     );
 }
 
 void printFooter() {
-    printf("%s",   "\tfree(buffer);\n"
-                   "\n"
-                   "\treturn 0;\n}");
+    printf("%s", "\n\treturn 0;\n}");
 }
 
 //	Print all the variable declarations.
