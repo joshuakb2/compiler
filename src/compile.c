@@ -22,8 +22,8 @@
 #include "symbolTable.h"
 #include "compile.h"
 
-const char VAR_HEADER[] = "tl13_";
-const int VAR_HEADER_LENGTH = 5;
+const char VAR_PREFIX[] = "tl13_";
+const int VAR_PREFIX_LENGTH = 5;
 
 void compile(program * p) {
     printHeader();
@@ -39,7 +39,6 @@ void printHeader() {
     printf("%s", "#include <stdlib.h>\n"
                  "#include <stdio.h>\n"
                  "#include <stdbool.h>\n"
-                 "#include <string.h>\n"
                  "\n"
                  "int readInt() {\n"
                    "\tprintf(\"%s\", \"Please type an integer: \");\n"
@@ -249,12 +248,12 @@ void printFactor(factor * f) {
     free(f);
 }
 
-//  Adds the header to the symbol name
+//  Adds the prefix to the symbol name
 char * getVarName(symbol * s) {
-    char * name = (char *) malloc(sizeof(char) * (strlen(s->key) + 1 + VAR_HEADER_LENGTH));
+    char * name = (char *) malloc(sizeof(char) * (strlen(s->key) + 1 + VAR_PREFIX_LENGTH));
 
-    strcpy(name, VAR_HEADER);
-    strcpy(name + VAR_HEADER_LENGTH, s->key);
+    strcpy(name, VAR_PREFIX);
+    strcpy(name + VAR_PREFIX_LENGTH, s->key);
 
     return name;
 }

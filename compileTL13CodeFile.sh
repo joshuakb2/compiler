@@ -3,6 +3,10 @@
 # Get current directory of this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+err() {
+    echo "$@" 1>&2
+}
+
 # Print help info
 help() {
     echo "Compiles the given TL13 input file and displays the output C code on the stdout."
@@ -30,8 +34,8 @@ compiler="$DIR/tl13compiler"
 
 # Make sure the compiler is there and can be executed
 if ! [[ -x "$compiler" ]]; then
-    echo "Expected to find an executable file at the following path: \"$compiler\""
-    echo "Try executing \"make\" first."
+    err "Expected to find an executable file at the following path: \"$compiler\""
+    err "Try executing \"make\" first."
     exit 1
 fi
 
@@ -49,15 +53,15 @@ if [[ -f "$tl13filePath" ]]; then
             echo "The TL13 file was successfully compiled as \"$binFile\"."
             exit 0
         else # My compiler succeeds but gcc fails
-            echo "gcc threw an error!!! Oh no!!!!!"
+            err "gcc threw an error!!! Oh no!!!!!"
             exit 1
         fi
     else # My compiler fails
-        echo "The TL13 compiler rejected the input file!"
+        err "The TL13 compiler rejected the input file!"
         rm "$cFile"
         exit 1
     fi
 else # The input file does not exist
-    echo "The given TL13 code file does not exist!"
+    err "The given TL13 code file does not exist!"
     exit 1
 fi

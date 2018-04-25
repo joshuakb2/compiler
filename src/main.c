@@ -282,9 +282,9 @@ void yyerror(const char * s, ...) {
 
     va_start(args, s);
 
-    printf("\n\nError: ");
-    vprintf(s, args);
-    printf("\n\n");
+    fprintf(stderr, "\n\nError: ");
+    vfprintf(stderr, s, args);
+    fprintf(stderr, "\n\n");
 
     va_end(args);
 

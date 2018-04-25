@@ -10,7 +10,7 @@ begin
         B := 1;
         while COUNT > 0 do
             writeInt A;
-            TEMP := A > B; # The right hand side of this assignment is boolean, but TEMP is of type INT
+            TEMP := A > B; % The right hand side of this assignment is boolean, but TEMP is of type INT
             A := B;
             B := TEMP;
             COUNT := COUNT - 1;

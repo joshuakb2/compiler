@@ -1,3 +1,15 @@
+/* Joshua Baker		jkb150030
+ * Dr. Gupta
+ * CS 4386.001
+ * 
+ * parser.y
+ * 
+ * This is the input file to bison. It builds the parser, which reads
+ * in tokens from flex and builds the parse tree. When the parse tree
+ * is complete, the parser begins compilation according to the parse
+ * tree.
+ */
+
 %{
 #include <stdlib.h>
 #include <stdio.h>
@@ -76,8 +88,8 @@ declarations:       VAR IDENT AS type SC declarations                       { $$
             |       /* empty */                                             { $$ = makeDeclarationSeq(); }
             ;
 
-type:               INT     { $$ = INT_t; }
-    |               BOOL    { $$ = BOOL_t; }
+type:               INT                                                     { $$ = INT_t; }
+    |               BOOL                                                    { $$ = BOOL_t; }
     ;
 
 statementSequence:  statement SC statementSequence                          { $$ = addStatement($3, $1); }
@@ -127,12 +139,3 @@ factor:             IDENT                                                   { $$
 
 
 %%
-
-
-
-/*
-void yyerror(const char * s) {
-    printf("\n\nError: %s\n\n", s);
-    exit(1);
-}
-*/

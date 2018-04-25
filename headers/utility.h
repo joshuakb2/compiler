@@ -2,7 +2,7 @@
  * Dr. Gupta
  * CS 4386.001
  * 
- * compile.h
+ * utility.h
  * 
  * This header file contains forward declarations for functions in utility.c
  * which help with pretty-printing the output C code or the parse tree.

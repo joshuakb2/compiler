@@ -4,7 +4,7 @@ program
     var B as int;
     var TEMP as int;
 begin
-    TEMP := 4294967304;
+    TEMP := 4294967304; % This int is too big
     COUNT := readInt;
     if COUNT > 0 then
         A := 0;
